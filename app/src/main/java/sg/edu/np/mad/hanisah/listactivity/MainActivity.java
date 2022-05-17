@@ -1,53 +1,29 @@
 package sg.edu.np.mad.hanisah.listactivity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.Button;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends AppCompatActivity implements Serializable
 {
-    private ArrayList<User> userList;
+    public ArrayList<User> userList;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //Creating the alert
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        builder.setTitle("Profile");
-        builder.setMessage("MADness");
-        builder.setCancelable(true);
-        builder.setPositiveButton("VIEW", new DialogInterface.OnClickListener()
-        {
-            public void onClick(DialogInterface dialog, int id)
-            {
-                int random_int = randomInt(10000);
-
-                //transferring data to next activity
-                Intent activityName = new Intent(MainActivity.this, PracWeek2.class);
-                activityName.putExtra("RandomInt", random_int);
-                startActivity(activityName);
-                //setContentView(R.layout.pracweek2);
-            }
-        });
-        builder.setNegativeButton("CLOSE", new DialogInterface.OnClickListener()
-        {
-            public void onClick(DialogInterface dialog, int id)
-            {
-            }
-        });
 
         userList = initialiseData();
 
@@ -61,18 +37,45 @@ public class MainActivity extends AppCompatActivity
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
 
-        /*making the img interactable
-        ImageView img = findViewById(R.id.imageView3);
-        img.setOnClickListener(new View.OnClickListener()
-        {
-            public void onClick(View V)
-            {
-                AlertDialog alert = builder.create();
-                alert.show();
+        //making the img interactable
+        mAdapter.setOnItemClickListener(new userAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                User u = userList.get(position);
+                creatingAlert(u);
             }
-        });*/
+        });
     }
 
+    public void creatingAlert(User u)
+    {
+        //Creating the alert
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle("Profile");
+        builder.setMessage(u.name);
+        builder.setCancelable(true);
+        builder.setPositiveButton("VIEW", new DialogInterface.OnClickListener()
+        {
+            public void onClick(DialogInterface dialog, int id)
+            {
+                //transferring data to next activity (how to transfer object)
+                Intent activityName = new Intent(MainActivity.this, PracWeek2.class);
+                activityName.putExtra("userName", u.name);
+                activityName.putExtra("followStatus", u.followed);
+                startActivity(activityName);
+            }
+        });
+        builder.setNegativeButton("CLOSE", new DialogInterface.OnClickListener()
+        {
+            public void onClick(DialogInterface dialog, int id)
+            {
+            }
+        });
+
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
     public int randomInt(int ceiling)
     {
         int min = 0;
@@ -114,7 +117,7 @@ public class MainActivity extends AppCompatActivity
         for ( Object user : userList)
         {
             User u = (User) user;
-            System.out.println(u.name);
+            System.out.println(u.id);
         }
         return userList;
     }
