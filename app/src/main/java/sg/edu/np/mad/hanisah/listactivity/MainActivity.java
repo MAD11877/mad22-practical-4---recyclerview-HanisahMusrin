@@ -1,6 +1,9 @@
 package sg.edu.np.mad.hanisah.listactivity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -13,6 +16,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
 {
+    private ArrayList<User> userList;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -45,9 +49,20 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        initialiseData();
-        //making the img interactable
-        ImageView img = findViewById(R.id.imageView4);
+        userList = initialiseData();
+
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+
+        //set adapter
+        userAdapter mAdapter = new userAdapter(userList);
+
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(mAdapter);
+
+        /*making the img interactable
+        ImageView img = findViewById(R.id.imageView3);
         img.setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View V)
@@ -55,8 +70,9 @@ public class MainActivity extends AppCompatActivity
                 AlertDialog alert = builder.create();
                 alert.show();
             }
-        });
+        });*/
     }
+
     public int randomInt(int ceiling)
     {
         int min = 0;
@@ -66,7 +82,7 @@ public class MainActivity extends AppCompatActivity
         int random_int = (int)Math.floor(Math.random()*(max-min+1)+min);
         return random_int;
     }
-    public void initialiseData()
+    public ArrayList<User> initialiseData()
     {
         ArrayList<String> nameList = new ArrayList<String>();
         ArrayList<String> descList = new ArrayList<String>();
@@ -100,5 +116,6 @@ public class MainActivity extends AppCompatActivity
             User u = (User) user;
             System.out.println(u.name);
         }
+        return userList;
     }
 }
