@@ -1,22 +1,18 @@
 package sg.edu.np.mad.hanisah.listactivity;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
+import android.os.Parcelable;
 
-import java.io.Serializable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements Serializable
+public class MainActivity extends AppCompatActivity
 {
     public ArrayList<User> userList;
     @Override
@@ -61,8 +57,8 @@ public class MainActivity extends AppCompatActivity implements Serializable
             {
                 //transferring data to next activity (how to transfer object)
                 Intent activityName = new Intent(MainActivity.this, PracWeek2.class);
-                activityName.putExtra("userName", u.name);
-                activityName.putExtra("followStatus", u.followed);
+
+                activityName.putExtra("user", u);
                 startActivity(activityName);
             }
         });
@@ -76,15 +72,17 @@ public class MainActivity extends AppCompatActivity implements Serializable
         AlertDialog alert = builder.create();
         alert.show();
     }
+
+    //Generate random int value from 0 to given number
     public int randomInt(int ceiling)
     {
         int min = 0;
         int max = ceiling;
 
-        //Generate random int value from 0 to 100
         int random_int = (int)Math.floor(Math.random()*(max-min+1)+min);
         return random_int;
     }
+
     public ArrayList<User> initialiseData()
     {
         ArrayList<String> nameList = new ArrayList<String>();

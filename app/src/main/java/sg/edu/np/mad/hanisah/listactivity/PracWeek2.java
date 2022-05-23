@@ -8,9 +8,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
-
 public class PracWeek2 extends AppCompatActivity{
-    public boolean followStatus;
+    private boolean followStatus;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -20,13 +19,13 @@ public class PracWeek2 extends AppCompatActivity{
         //receives information from previous activity
         Intent receivingEnd = getIntent();
 
-        String username = receivingEnd.getStringExtra("userName");
+        User user = receivingEnd.getParcelableExtra("user");
+
+        String username = user.name;
         TextView tv1 = findViewById(R.id.textView);
         tv1.setText(username);
 
-        followStatus = receivingEnd.getBooleanExtra("followStatus", false);
-
-        int userID = receivingEnd.getIntExtra("userID",0);
+        followStatus = user.followed;
 
         //initialise follow button
         Button followBtn = findViewById(R.id.button);
@@ -47,12 +46,12 @@ public class PracWeek2 extends AppCompatActivity{
             {
                 if (followBtn.getText() == "FOLLOW")
                 {
-                    followStatus = true;
+                    user.followed = true;
                     followBtn.setText("UNFOLLOW");
                     Toast.makeText(getApplicationContext(),"Followed", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                followStatus = false;
+                user.followed = false;
                 followBtn.setText("FOLLOW");
                 Toast.makeText(getApplicationContext(),"Unfollowed", Toast.LENGTH_SHORT).show();
                 return;
